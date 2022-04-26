@@ -5,13 +5,16 @@ services:
   db:
     image: postgres:9.6
     volumes:
-      - dados:/var/lib/postgres/data
+      - dados:/var/lib/postgresql/data
       - ./scripts:/scripts
       - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
   frontend:
     image: nginx:1.13
     volumes:
+      #Site
       - ./web:/usr/share/nginx/html/
+      #Configuração do proxy reverso
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     ports:
       - 80:80
   app:
@@ -20,5 +23,3 @@ services:
       - ./app:/app
     working_dir: /app
     command: bash ./app.sh
-    ports:
-      - 8080:8080
